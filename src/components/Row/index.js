@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import './Row.css';
-import axios from './axios';
-import YouTube from 'react-youtube';
-import movieTrailer from 'movie-trailer';
+import React, { useState, useEffect } from "react";
+import "./Row.css";
+import axios from "../../api/axios";
+import YouTube from "react-youtube";
+import movieTrailer from "movie-trailer";
 
-const base_url = 'https://image.tmdb.org/t/p/original/';
+const base_url = "https://image.tmdb.org/t/p/original/";
 
 function Row({ title, fetchUrl, isLargeRow }) {
   const [movies, setMovies] = useState([]);
-  const [trailerUrl, setTrailerUrl] = useState('');
+  const [trailerUrl, setTrailerUrl] = useState("");
   useEffect(() => {
     async function fetchData() {
       const request = await axios.get(fetchUrl);
@@ -19,8 +19,8 @@ function Row({ title, fetchUrl, isLargeRow }) {
   }, [fetchUrl]);
 
   const opts = {
-    height: '390',
-    width: '100%',
+    height: "390",
+    width: "100%",
     playerVars: {
       //https://www.youtube.com/watch?v=XtMThy8QKqU
       autoplay: 1,
@@ -28,25 +28,25 @@ function Row({ title, fetchUrl, isLargeRow }) {
   };
   const handleClick = (movie) => {
     if (trailerUrl) {
-      setTrailerUrl('');
+      setTrailerUrl("");
     } else {
-      movieTrailer(movie?.title || movie?.name || movie?.original_name || '')
+      movieTrailer(movie?.title || movie?.name || movie?.original_name || "")
         .then((url) => {
           const urlParams = new URLSearchParams(new URL(url).search);
-          setTrailerUrl(urlParams.get('v'));
+          setTrailerUrl(urlParams.get("v"));
         })
         .catch((error) => console.log(error));
     }
   };
   return (
-    <div className='row'>
+    <div className="row">
       <h2>{title}</h2>
-      <div className='row__posters'>
+      <div className="row__posters">
         {movies.map((movie) => (
           <img
             onClick={() => handleClick(movie)}
             key={movie.id}
-            className={`row__poster ${isLargeRow && 'row__posterLarge'}`}
+            className={`row__poster ${isLargeRow && "row__posterLarge"}`}
             src={`${base_url}${
               isLargeRow ? movie.poster_path : movie.backdrop_path
             }`}
